@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkkcc_gem=self.webpackChunkkcc_gem||[]).push([[582],{582:function(t,e,c){c.r(e),e.default=function(){const t=document.querySelectorAll("img[data-src]");for(let e of t)e.setAttribute("src",e.getAttribute("data-src")),e.onload=function(){e.removeAttribute("data-src")}}}}]);

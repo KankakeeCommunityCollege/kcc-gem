@@ -1,0 +1,117 @@
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "../../node_modules/bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+// Include `_vars.scss` for use in Bootstrap default var overrides
+@import './0-tools/vars';
+
+/*
+$border-color: rgba(0,0,0,.25);
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 900px,
+  xl: 900px,
+  xxl: 900px
+);
+*/
+
+
+// Bootstrap 5 Default Variable Overrides
+// ======================================================================== //
+// Customize Bootstrap here
+$body-color: $color-bs-body;                      // Font color set on body
+$font-family-base: $font-family-paragraph;        // Custom base font family
+$font-size-base: $font-size;                      // Font size applied to body (in rem)
+$headings-font-family: $font-family-headings;     // Custom heading font family
+
+$link-decoration: none;                           // Override underlined anchors by default
+$link-hover-decoration: underline;                // Underlining has to be added when hovered
+
+// ======================================================================== //
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "../../node_modules/bootstrap/scss/variables";
+
+// 4. Include any default map overrides here
+
+// 5. Include remainder of required parts
+@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";
+
+// 6. Optionally include any other parts as needed
+@import "../../node_modules/bootstrap/scss/utilities";
+@import "../../node_modules/bootstrap/scss/reboot";
+@import "../../node_modules/bootstrap/scss/type";
+@import "../../node_modules/bootstrap/scss/images";
+@import "../../node_modules/bootstrap/scss/containers";
+@import "../../node_modules/bootstrap/scss/grid";
+@import "../../node_modules/bootstrap/scss/helpers";
+@import "../../node_modules/bootstrap/scss/tables";
+@import "../../node_modules/bootstrap/scss/forms";
+@import "../../node_modules/bootstrap/scss/buttons";
+@import "../../node_modules/bootstrap/scss/transitions";
+@import "../../node_modules/bootstrap/scss/dropdown";
+@import "../../node_modules/bootstrap/scss/nav";
+@import "../../node_modules/bootstrap/scss/navbar";
+@import "../../node_modules/bootstrap/scss/card";
+@import "../../node_modules/bootstrap/scss/accordion";
+// @import "../../node_modules/bootstrap/scss/breadcrumb";
+@import "../../node_modules/bootstrap/scss/alert";
+@import "../../node_modules/bootstrap/scss/close";
+@import "../../node_modules/bootstrap/scss/modal";
+
+/*
+Available Bootstrap imports:
+// @import 'root';
+// @import 'reboot';
+// @import 'type';
+// @import 'images';
+// @import 'containers';
+// @import 'grid';
+// @import 'tables';
+// @import 'forms';
+// @import 'buttons';
+// @import 'transitions';
+// @import 'dropdown';
+// @import 'button-group';
+// @import 'nav';
+// @import 'navbar';
+// @import 'card';
+// @import 'accordion';
+// @import 'breadcrumb';
+// @import 'pagination';
+// @import 'badge';
+// @import 'alert';
+// @import 'progress';
+// @import 'list-group';
+// @import 'close';
+// @import 'toasts';
+// @import 'modal';
+// @import 'tooltip';
+// @import 'popover';
+// @import 'carousel';
+// @import 'spinners';
+// @import 'offcanvas';
+// @import 'placeholders';
+*/
+
+// Generate contextual modifier classes for colorizing the alert.
+
+@each $state, $value in $theme-colors {
+  $alert-background: shift-color($value, $alert-bg-scale);
+  $alert-border: shift-color($value, $alert-color-scale);
+  $alert-color: shift-color($value, $alert-color-scale);
+
+  @if (contrast-ratio($alert-background, $alert-color) < $min-contrast-ratio) {
+    $alert-color: mix($value, color-contrast($alert-background), abs($alert-color-scale));
+  }
+  .alert-#{$state} {
+    @include alert-variant($alert-background, $alert-border, $alert-color);
+  }
+}
+
+// 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
+@import '../../node_modules/bootstrap/scss/utilities/api';
+
