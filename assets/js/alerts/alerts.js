@@ -5,7 +5,6 @@
 import createAlertsHtml from './createAlertsHtml';
 import cacheResponse from './cacheResponse';
 import getCachedResponse from './getCachedResponse';
-import checkForPrefersReducedMotion from './checkForPrefersReducedMotion';
 
 const SHEET_KEY = '1plXBiZY5pVbhNT-mszxEuqCl4zy8wMnz9gXXbbT_yLs'; // Corresponds to the ID of the Google Sheet
 const SHEET_TAB = 'Alerts'; // Corresponds to the tab of workbook: either  'Alerts' or 'Alerts Testing' unless you make a new one.
@@ -22,12 +21,15 @@ async function loadModule(module) {
 
   return module_func();
 }
-
-export default function alerts() {
-  checkForPrefersReducedMotion();
-
+/**
+ * 
+ * @param {class} Collapse is the Bootstrap 5 Collapse class imported in .../src/all.js
+ *   Collapse is needed in the module `contentHashLink`
+ */
+export default function alerts(Collapse) {
   if (!document.getElementById(EMERGENCY_ALERT_DIV_ID)) {
-    return pageHasAccordionOrTabs ? loadModule('contentHashLink') : null;
+    // return pageHasAccordionOrTabs ? loadModule('contentHashLink') : null;
+    if (pageHasAccordionOrTabs) return import('./contentHashLink').then(({ default: contentHashLink }) => contentHashLink(Collapse));
   }
 
   new Promise((resolve, reject) => { // First build the alert, whether by cache or API call
@@ -52,7 +54,7 @@ export default function alerts() {
     }
   }).then(() => {
     window.setTimeout(() => {
-      return pageHasAccordionOrTabs ? loadModule('contentHashLink') : null;
+      if (pageHasAccordionOrTabs) import('./contentHashLink').then(({ default: contentHashLink }) => contentHashLink(Collapse));
     }, 100)
   }) // Run accordion/tab JS, which includes a `scrollTo()`, after alert has painted
     .then(() => {

@@ -13,19 +13,14 @@
 const idRegex = /^id=/g; // Lets just cache these reused regex's here
 const queryStartRegex = /^\?/g;
 const endingSlashRegex = /\/$/g;
-const PREFERS_REDUCED_MOTION_LOCALSTORAGE_KEY = 'userPrefersReducedMotion'; // This localStorage key is set by module: './checkForPrefersReducedMotion.js'
-const scrollIntoViewOptionsObject = {
-  behavior: 'smooth',
-  block: 'center'
-}
-const reducedMotionscrollIntoViewOptionsObject = {
+const prefersReduced = window.matchMedia('(prefers-reduced-motion)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const scrollIntoViewOptions = {
+  behavior: (prefersReduced) ? 'auto' : 'smooth',
   block: 'center'
 }
 
 function focusElement(el) {
-  const prefersReducedMotion = window.localStorage.getItem(PREFERS_REDUCED_MOTION_LOCALSTORAGE_KEY);
-
-  prefersReducedMotion == 'true' ? el.scrollIntoView(reducedMotionscrollIntoViewOptionsObject) : el.scrollIntoView(scrollIntoViewOptionsObject);
+  el.scrollIntoView(scrollIntoViewOptions);
   return el.focus();
 }
 
@@ -50,6 +45,7 @@ function findContentTarget(hash) {
 }
 
 function checkForMatchingTabOrAccordion(hash) {
+  const Collapse = checkForMatchingTabOrAccordion.collapse;
   if ( document.querySelector(`.nav-tabs a[href="${hash}"]`) ) {  // Looks for a matching BS4 tab element
     let tab = $(`.nav-tabs a[href="${hash}"]`);  // **SIGH**, BS4 requires JQuery
 
@@ -61,28 +57,35 @@ function checkForMatchingTabOrAccordion(hash) {
         })
       .tab('show');  // Bootstrap 4 Tab method
   } else if ( document.querySelector(`${hash}.collapse`) ) {  // Looks for a matching BS4 collapse element
-    let card = $(hash);  // **SIGH**, BS4 requires JQuery
+    let collapse = document.querySelector(hash);
 
-    card
-      .on('shown.bs.collapse', () => {  // Bootstrap 4 Collapse method // Must be defined before the collapse is activated
-        window.location.search ?
-          checkForQuery(window.location.search.replace(queryStartRegex, ''), hash)
-        : findContentTarget(`button[data-target="${hash}"]`);
-      })
-      .collapse('show'); // Bootstrap 4 Collapse method
+    // Bootstrap 5 method for doing something after a collapse was shown
+    collapse.addEventListener('shown.bs.collapse', (e) => {
+      if (window.location.search) {
+        checkForQuery(window.location.search.replace(queryStartRegex, ''), hash);
+      }
+      findContentTarget(`button[data-bs-target="${hash}"]`);
+    });
+    // `Collapse.getOrCreateInstance(element)` is a Bootstrap 5 method
+    Collapse.getOrCreateInstance(collapse); // Creating the instance also toggles it open
   }
 }
 
 function checkForHash() {
-  if (window.location.hash) {
-    let hash = window.location.hash.replace(endingSlashRegex, '');
+  if (!window.location.hash)
+    return;
 
-    checkForMatchingTabOrAccordion(hash);
-  }
-  return;
+  let hash = window.location.hash.replace(endingSlashRegex, '');
+
+  checkForMatchingTabOrAccordion(hash);
 }
 
-function contentHashLink() {
+/**
+ * 
+ * @param {class} Collapse is the Bootstrap 5 Collapse class imported in .../src/all.js
+ */
+function contentHashLink(Collapse) {
+  checkForMatchingTabOrAccordion.collapse = Collapse;
   checkForHash();
   window.addEventListener('hashchange', checkForHash, false);
 

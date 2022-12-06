@@ -17,9 +17,9 @@ $container-max-widths: (
 */
 
 
-// Bootstrap 5 Default Variable Overrides
 // ======================================================================== //
-// Customize Bootstrap here
+// Bootstrap 5 Default Variable Overrides
+// Customize Bootstrap SASS variables here
 $body-color: $color-bs-body;                      // Font color set on body
 $font-family-base: $font-family-paragraph;        // Custom base font family
 $font-size-base: $font-size;                      // Font size applied to body (in rem)
@@ -27,6 +27,9 @@ $headings-font-family: $font-family-headings;     // Custom heading font family
 
 $link-decoration: none;                           // Override underlined anchors by default
 $link-hover-decoration: underline;                // Underlining has to be added when hovered
+
+$accordion-button-bg: rgba(0,0,0,.03);          // Background color for a collapsed accordion (which is a button element)
+$accordion-border-width: 2px;                     // Width of the accordion border (BS5 default 1px)
 
 // ======================================================================== //
 
@@ -97,8 +100,17 @@ Available Bootstrap imports:
 // @import 'placeholders';
 */
 
+// ==== CUSTOMIZED function for generating alert classes ================ //
+//   (e.g. alert-primary, alert-secondary, etc.):                         //
+//   - Alert borders are far too subtle for KCC's accessibility needs.    //
+//   - This customization sets the alert div's border-color               //
+//       to the same color as the font which gives alerts a               //
+//       very obvious border.                                             //
+//                                                                        //
+//   This function must be placed after your `@import 'alert'` to         //
+//     override the same Bootstrap function                               //
+// ====================================================================== //
 // Generate contextual modifier classes for colorizing the alert.
-
 @each $state, $value in $theme-colors {
   $alert-background: shift-color($value, $alert-bg-scale);
   $alert-border: shift-color($value, $alert-color-scale);

@@ -3,7 +3,7 @@
   &__padding-left {
     padding-left: 0;
   }
-  &__typography--card-header .btn-link {
+  &__typography--card-header .accordion-button {
     color: $primary-blue;
     font-family: $font-family-paragraph;
     font-size: 1.4rem;
@@ -24,7 +24,7 @@
     font-weight: 400;
     height: 30px;
     line-height: 28px;
-    margin-right: 10px;
+    margin-right: 15px;
     position: relative; // Safari doesn't want to render this pseudo-element without `position: relative;`
     text-align: center;
     text-decoration: none !important;
@@ -37,7 +37,3 @@
   }
 }
 
-.accordion__button {
-  text-indent: -45px;
-  margin-left: 45px;
-}

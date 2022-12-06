@@ -1,5 +1,5 @@
 ---
-accordion_page: 'Accordion'
+accordion_page: 'KCC Gem'
 card_heading: "KCC Employee Giving"
 order: 4
 ---

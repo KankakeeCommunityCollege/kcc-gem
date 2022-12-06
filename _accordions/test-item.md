@@ -1,5 +1,5 @@
 ---
-accordion_page: Accordion
+accordion_page: KCC Gem
 card_heading: Test Heading Item
 order: 7
 ---
