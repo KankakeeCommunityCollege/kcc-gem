@@ -3,12 +3,40 @@ layout: default
 baseurl: '/'
 title: KCC Gem
 description: ''
+slides:
+  - image: /uploads/late-starting-classes-web-banner-fall-22.jpg
+    alt-text: >-
+      Late-start & 8-week classes. Enroll now. Check the class schedule for
+      options
+    url: https://selfservice.kcc.edu/student/courses
+    white_background: true
+  - image: /uploads/free-tuition_banner_2023.jpg
+    alt-text: >-
+      Free Tuition and paths to good-paying jobs. Local jobs are waiting, and
+      KCC tuition could be free when you enroll in manufacturing, welding or
+      electrical engineering technology programs. Get started at
+      https://skills.kcc.edu
+    url: https://skills.kcc.edu
+    white_background: false
+  - image: /uploads/CCSmart-banner_22.jpg
+    alt-text: >-
+      Planning to transfer or enter the workforce? Smart CCSmart.org. One-stop
+      for valuable Community College information
+    url: https://www.ccsmart.org
+    white_background: false
+  - image: /uploads/short-term-classes-web-banner-22.jpg
+    alt-text: >-
+      Find a Short-term class that works for you. Focus on one or more classes —
+      and get it done! Banner
+    url: https://news.kcc.edu/2022/11/15/short-term-class-options-spring-2023.html
+    white_background: false
 ---
 
 <main>
   <div class="container">
     <div class="row">
       <div class="col">
+        {% include hero-slider.html %}
         <h2 class="typography__h2 mb-5">KCC Gem</h2>
         <p class="mb-2">A starting point for KCC websites.</p>
         <hr>
@@ -38,6 +66,7 @@ description: ''
         <hr>
         <br>
         <h3 class="display-3">Components</h3>
+        <h4 class="typography__h4">Em--dash</h4>
         <p>
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">

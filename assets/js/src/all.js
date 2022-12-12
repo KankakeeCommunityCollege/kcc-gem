@@ -1,4 +1,5 @@
 import '../../scss/kcc-theme.scss';
+import wrapPowerText from './wrapPowerText';
 
 function loadModule(...moduleArgs) {
   const module = moduleArgs[0];
@@ -50,13 +51,16 @@ window.addEventListener('load', () => {
           .then(({ default: alerts }) => alerts(Collapse))
           .then(() => {
             if (document.querySelector('.hero-slider__slider')) {
-              Promise.resolve()
-                .then(() => loadModule('wrapPowerText'))
-                .then(() => loadModule('sliders', 'initSliders'))
-                .catch((err) => console.error(`Error loading slider modules :${err}`, err))
+              import('./wrapPowerText').then(({ default: wrapPowerText }) => wrapPowerText());
+              import('./sliders').then(({ default: initSliders }) => initSliders());
+
+              // Promise.resolve()
+              //   .then(() => loadModule('wrapPowerText'))
+              //   .then(() => loadModule('sliders', 'initSliders'))
+              //   .catch((err) => console.error(`Error loading slider modules :${err}`, err))
             }
-            loadModule('walkText', 'walkText', document.body)
-            document.querySelector('img[data-src]') ? loadModule('lazyLoad') : null;
+            loadModule('walkText');
+            if (document.querySelector('img[data-src]')) loadModule('lazyLoad');
             loadModule('footerDate')
             loadModule('addClassToOpenNavbar')
           })
@@ -66,7 +70,10 @@ window.addEventListener('load', () => {
           })
           .catch(err => console.error(`Error loading window.onload modules: ${err}`, err))
 
-          if (window.localStorage.getItem('darkModeSetting') == 'true' || window.location.pathname == '/settings/') {
+          if (
+            window.localStorage.getItem('darkModeSetting') == 'true' ||
+            window.location.pathname == '/settings/'
+          ) {
             import('./darkMode').then(({ default: darkMode }) => {
               return darkMode;
             }).then(darkMode => {

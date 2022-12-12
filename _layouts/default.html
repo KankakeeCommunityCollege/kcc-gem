@@ -1,7 +1,6 @@
 {% include document-head.html %}
 {% include styles/fonts.html %}
 {% include scripts/google-tag.html %}
-{% include styles/vendor.html %}
 {%- if page.include_datatables == true -%}
 <!-- dataTables stylesheets -->
 <!-- dataTables Bootstrap4 themed stylesheet -->
@@ -18,7 +17,6 @@
 {{ content }}
 {% if page.no_main_call_to_action != true %}{% include main-call-to-action.html %}{% endif %}
 {% include footer.html %}
-{% include scripts/vendor-cdn.html %}
 {% include scripts/google-api.html %}
 {% include scripts/kcc-theme.html %}
 {%- if page.include_datatables == true -%}

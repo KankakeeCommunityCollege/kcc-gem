@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkkcc_gem=self.webpackChunkkcc_gem||[]).push([[909],{909:function(e,n,c){c.r(n);const t=document.getElementById("currentYear");n.default=function(){const e=(new Date).getFullYear();t.innerHTML=e}}}]);

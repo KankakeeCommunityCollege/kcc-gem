@@ -6,9 +6,8 @@ function darkModeClickHandler(e) {
 }
 
 function darkMode() {
-  console.info('Dark Mode (is the best)!');
-  window.localStorage.getItem('darkModeSetting') === 'true' ? htmlElement.classList.add('dark-mode') : null;
-  if (window.location.pathname !== '/settings/') return;
+  if (window.localStorage.getItem('darkModeSetting') === 'true') htmlElement.classList.add('dark-mode');
+  if (window.location.pathname !== '/settings/') return; // Remaining JS should only run on /settings page!
   const darkModeButton = document.getElementById(DARK_MODE_BUTTON_ID);
 
   darkModeButton.addEventListener('click', darkModeClickHandler);

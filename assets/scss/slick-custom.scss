@@ -1,0 +1,33 @@
+// Base styling for Slick Carousel + customizations
+// ===================================================== //
+
+// SASS Variables
+@import '0-tools/vars';
+
+// Override Slick variables here
+
+// Default SCSS variables from slick-theme.scss
+// $slick-font-path: "./fonts/" !default;
+// $slick-font-family: "slick" !default;
+// $slick-loader-path: "./" !default;
+// $slick-arrow-color: white !default;
+// $slick-dot-color: black !default;
+// $slick-dot-color-active: $slick-dot-color !default;
+// $slick-prev-character: "\2190" !default;
+// $slick-next-character: "\2192" !default;
+// $slick-dot-character: "\2022" !default;
+// $slick-dot-size: 6px !default;
+// $slick-opacity-default: 0.75 !default;
+// $slick-opacity-on-hover: 1 !default;
+// $slick-opacity-not-active: 0.25 !default;
+
+// Set custom path to required slick assets
+$slick-font-path: '../../slick/fonts/';
+$slick-loader-path: '../../slick/';
+
+// Import the main slick SCSS files
+@import '../../node_modules/slick-carousel/slick/slick.scss';
+@import '../../node_modules/slick-carousel/slick/slick-theme.scss';
+
+// Custom style overrides + additions for slick slider (slick-carousel)
+@import '2-modules/hero-slider';
