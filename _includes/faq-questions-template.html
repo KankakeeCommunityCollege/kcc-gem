@@ -1,0 +1,40 @@
+<div class="accordion mt-2 mt-lg-3" id="FAQaccordion">
+  {% assign faqs = site.faq-questions | sort: 'order' %}
+  {% for item in faqs %}
+  <div class="accordion-item">
+    <h3 class="accordion-header" id="heading-{{ forloop.index }}">
+      <button
+       class="accordion-button{% unless forloop.first %} collapsed{% endunless %}"
+       type="button"
+       data-bs-toggle="collapse"
+       data-bs-target="#collapse-{{ forloop.index }}"
+       aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}"
+       aria-controls="collapse-{{ forloop.index }}">
+        {{ item.question }}
+      </button>
+    </h3>
+    <div id="collapse-{{ forloop.index }}"
+     class="accordion-collapse collapse{% if forloop.first %} show{% endif %}"
+     aria-labelledby="heading-{{ forloop.index }}"
+     data-bs-parent="#FAQaccordion">
+      <div class="accordion-body">
+        <a
+         href="cloudcannon:collections/{{ item.path }}"
+         class="btn btn-success mb-4 editor-button"
+         aria-hidden="true">
+         <svg
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#fff"
+          class="mr-2"
+          height="24"
+          width="24">
+            <path d="M5 19h1.4l8.625-8.625-1.4-1.4L5 17.6ZM19.3 8.925l-4.25-4.2 1.4-1.4q.575-.575 1.413-.575.837 0 1.412.575l1.4 1.4q.575.575.6 1.388.025.812-.55 1.387ZM17.85 10.4 7.25 21H3v-4.25l10.6-10.6Zm-3.525-.725-.7-.7 1.4 1.4Z"/>
+          </svg>&nbsp;Edit This Item
+        </a>
+        {{ item.content | markdownify }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>

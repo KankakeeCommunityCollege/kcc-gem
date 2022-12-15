@@ -47,6 +47,8 @@ collections:
     output: false
   tabs:
     output: false
+  faq-questions:
+    output: false
 defaults:
 - scope:
     path: ''
