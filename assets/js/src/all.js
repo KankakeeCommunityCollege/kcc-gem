@@ -25,8 +25,20 @@ window.addEventListener('load', () => {
         //  0.1)   Import non-essential Bootstrap 5 JS on-demand
         //  0.1.1  Import BS5 Modal JS if the .modal class is present in the current page
         //  0.1.2  Import BS5
-        if (document.querySelector('.modal')) {
-          import('bootstrap/js/src/modal').then(({ default: Modal }) => Modal);
+        if (document.querySelector('button[data-bs-toggle="modal"]')) {
+          import('./loadBsModal').then(({default: loadBsModal}) => loadBsModal());
+          // let modalLoaded = false;
+          // const modalList = document.querySelectorAll('button[data-bs-toggle="modal"]');
+
+          // function loadModal() {
+          //   import('bootstrap/js/src/modal').then(({ default: Modal }) => Modal);
+          // }
+
+          // [...modalList].map((btn) => {
+          //   btn.addEventListener('click', () => )
+          // });
+
+          
         }
         if (document.querySelector('.tab-content')) {
           import('bootstrap/js/src/tab').then(({ default: Tab }) => Tab);
