@@ -46,49 +46,73 @@ function findContentTarget(hash) {
 
 function checkForMatchingTabOrAccordion(hash) {
   const Collapse = checkForMatchingTabOrAccordion.collapse;
-  if ( document.querySelector(`.nav-tabs a[href="${hash}"]`) ) {  // Looks for a matching BS4 tab element
-    let tab = $(`.nav-tabs a[href="${hash}"]`);  // **SIGH**, BS4 requires JQuery
+  const Tab = checkForMatchingTabOrAccordion.tab;
 
-    tab
-      .on('shown.bs.tab', () => {  // Bootstrap 4 method for tab events // Must be defined before the tab is activated
-        window.location.search ?
-          checkForQuery(window.location.search.replace(queryStartRegex, ''), hash)
-          : findContentTarget(`${hash}-label`); // You need to .scrollIntoView() & .focus() on the tab-label which is an <a href="...">. It won't work to do .scrollIntoView() and .focus() on the div
-        })
-      .tab('show');  // Bootstrap 4 Tab method
-  } else if ( document.querySelector(`${hash}.collapse`) ) {  // Looks for a matching BS4 collapse element
-    let collapse = document.querySelector(hash);
+  // Handle Bootstrap 5 Tabs (if it was a tab that was clicked):
+  if (document.querySelector(`.navTabs button[data-bs-target="${hash}"]`)) {
+    let tabEl = document.querySelector(`.navTabs button[data-bs-target="${hash}"]`);
+
+    // Bootstrap 5 method for doing something after a tab was opened
+    tabEl.addEventListener('shown.bs.tab', (e) => {
+      if (window.location.search !== '') {
+        checkForQuery(window.location.search.replace(queryStartRegex, ''), hash);
+      }
+      findContentTarget(`button[data-bs-target="${hash}"]`);
+    });
+    // `Tab.getOrCreateInstance(el)` is a Bootstrap 5 method
+    const tab = Tab.getOrCreateInstance(tabEl);
+
+    tab.show(); // Bootstrap 5 method to show a tab
+  }
+  // Handle Bootstrap 5 Accordion (if it was an accordion):
+  if (document.querySelector(`${hash}.collapse`)) {  // Looks for a matching BS4 collapse element
+    let collapseEl = document.querySelector(hash);
 
     // Bootstrap 5 method for doing something after a collapse was shown
-    collapse.addEventListener('shown.bs.collapse', (e) => {
+    collapseEl.addEventListener('shown.bs.collapse', (e) => {
       if (window.location.search) {
         checkForQuery(window.location.search.replace(queryStartRegex, ''), hash);
       }
       findContentTarget(`button[data-bs-target="${hash}"]`);
     });
     // `Collapse.getOrCreateInstance(element)` is a Bootstrap 5 method
-    Collapse.getOrCreateInstance(collapse); // Creating the instance also toggles it open
+    const collapse = Collapse.getOrCreateInstance(collapseEl);
+
+    collapse.show(); // Bootstrap 5 `.show()` opens the collapsed element
   }
 }
 
 function checkForHash() {
-  if (!window.location.hash)
+  if (window.location.hash === '')
     return;
 
-  let hash = window.location.hash.replace(endingSlashRegex, '');
-
-  checkForMatchingTabOrAccordion(hash);
+    checkForMatchingTabOrAccordion(window.location.hash.replace(endingSlashRegex, ''));
 }
 
 /**
  * 
  * @param {class} Collapse is the Bootstrap 5 Collapse class imported in .../src/all.js
  */
-function contentHashLink(Collapse) {
+async function contentHashLink(Collapse) {
+  let tabClass = undefined;
+
+  if (document.querySelector('.navTabs')) {
+    // Import the Bootstrap 5 Tab class if the page has tabs
+    const { default: Tab } = await import('bootstrap/js/src/tab');
+
+    tabClass = Tab;
+  }
+  // Hand off the Bootstrap 5 methods to our handler function
+  checkForMatchingTabOrAccordion.tab = tabClass;
   checkForMatchingTabOrAccordion.collapse = Collapse;
-  checkForHash();
+  
+  checkForHash(); // Make an initial check for a hash in the URL (& open its' tab or accordion)
+  // Watch for the `onhashchange` event - which happens when a user clicks the browser/history
+  //    back button after clicking through some accordion or tabs.
   window.addEventListener('hashchange', checkForHash, false);
 
+  // Browser history states are added via `addAccordionOrTabHistoryStates` as a user navigates 
+  //    through either interface.
   import('./addAccordionOrTabHistoryStates').then(({ default: addAccordionOrTabHistoryStates }) => {
     addAccordionOrTabHistoryStates();
   });

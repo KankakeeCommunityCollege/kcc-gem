@@ -1,13 +1,19 @@
+/**
+ * 
+ * @function addAccordionOrTabHistoryStates adds browser history states
+ *    as a user navigates through tabs and/or accordions. Allows user
+ *    to navigate back through visited items using browser back button.
+ */
 const ACCORDION_ID = 'accordion';
 const TABS_SELECTOR = '.navTabs';
 
 function addHistoryState(target, hashTarget) {
+  const title = ''; // Pass empty string as pushState() title parameter
   let url = new URL(window.location);
   let state = {
     page: document.title,
-    accordion: target.innerText.trim() // .trim() is needed b/c of the accordion's HTML--each accordion button's text is proceeded by a space
+    accordion: target
   };
-  const title = ''; // Pass empty string as pushState() title parameter
 
   url.search = ''; // Remove any searchParams/queries from the URL (e.g. /?id=heading#page)
   url.hash = hashTarget;
@@ -18,32 +24,30 @@ function accordionHandler(e) {
   if ( !e.target.matches('.accordion__button') )
     return;
   
-  const accordionIsOpening = !Boolean(JSON.parse(e.target.getAttribute('aria-expanded')));
-
-  accordionIsOpening ? addHistoryState(e.target, e.target.dataset.target) : null;
+  // We don't want to add a duplicate history state, when an accordion item is clicked closed
+  if (e.target.getAttribute('aria-expanded') === 'true') {
+    // .trim() is needed b/c of the accordion's HTML--each accordion button's text is proceeded by a space
+    addHistoryState(e.target.innerText.trim(), e.target.dataset.bsTarget);
+  }
 }
 
 function tabHandler(e) {
-  let target = e.target;
-  let targetHref = target.hash;
+  if (!e.target.matches('.nav-link'))
+    return;
 
-  addHistoryState(e.target, targetHref)
-}
-
-function watchElementForEvent(el, event, handler) {
-  el.addEventListener(event, handler);
+  addHistoryState(e.target.innerText.trim(), e.target.dataset.bsTarget);
 }
 
 function addAccordionOrTabHistoryStates() {
   if (document.getElementById('accordion')) {
     const accordion = document.getElementById(ACCORDION_ID);
 
-    watchElementForEvent(accordion, 'click', accordionHandler);
+    accordion.addEventListener('click', accordionHandler);
   }
   if (document.querySelector('.navTabs')) {
     const tabs = document.querySelector(TABS_SELECTOR);
   
-    watchElementForEvent(tabs, 'click', tabHandler);
+    tabs.addEventListener('click', tabHandler);
   }
 }
 
