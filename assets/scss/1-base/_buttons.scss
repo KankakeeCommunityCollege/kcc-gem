@@ -63,9 +63,16 @@
     margin-top: 0.25rem;
     margin-bottom: .375rem;
     &--mobile {
+      border-color: $color-blue-grey;
+      padding-left: 1rem;
+      padding-right: 1rem;
       position: absolute;
       bottom: .65rem;
+      border-radius: .25rem;
       left: 1rem;
+      &:hover {
+        border-color: $color-blue-grey;
+      }
     }
   }
 }

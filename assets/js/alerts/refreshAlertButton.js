@@ -6,18 +6,27 @@ const BUTTON = document.getElementById('syncAlert');
 function syncHandler(e) {
   const SVG = BUTTON.querySelector('.svg__sync');
 
-  Promise.resolve()
-    .then(() => {
-      BUTTON.classList.add('buttons--sync--visible');
-      SVG.classList.add('loader__sync--animate');
-    }).then(() => {
-      // Add a short delay before fetching the new alert
-      window.setTimeout(() => { // (alert fetches too fast for the loading animation without this delay)
-        import('./fetchNewAlert').then(({default: fetchNewAlert}) => {
-          gapi.load('client', fetchNewAlert); // Runs a new call to gapi and repaints the alert HTML
-        });
-      }, 1000);
-    })
+  BUTTON.classList.add('buttons--sync--visible');
+  SVG.classList.add('loader__sync--animate');
+  // Add a short delay before fetching the new alert
+  window.setTimeout(() => { // (alert fetches too fast for the loading animation without this delay)
+    import('./fetchNewAlert').then(({default: fetchNewAlert}) => {
+      gapi.load('client', fetchNewAlert); // Runs a new call to gapi and repaints the alert HTML
+    });
+  }, 1000);
+
+  // Promise.resolve()
+  //   .then(() => {
+  //     BUTTON.classList.add('buttons--sync--visible');
+  //     SVG.classList.add('loader__sync--animate');
+  //   }).then(() => {
+  //     // Add a short delay before fetching the new alert
+  //     window.setTimeout(() => { // (alert fetches too fast for the loading animation without this delay)
+  //       import('./fetchNewAlert').then(({default: fetchNewAlert}) => {
+  //         gapi.load('client', fetchNewAlert); // Runs a new call to gapi and repaints the alert HTML
+  //       });
+  //     }, 1000);
+  //   })
 }
 
 function showButtonOnInitialLoad(button) {

@@ -32,15 +32,14 @@ function createAlertsHtml(response) {  // Incoming response from our Google Shee
   const d = new Date;
   const s = new Date(start);
   const e = new Date(end);
-  const alertTypeClass = checkAlertType(type);
-  const alertType = checkAlertType(type);
+  const alertClass = checkAlertType(type);
   const alertIsActive = expire === 'FALSE' || expire === 'TRUE' && s.getTime() <= d.getTime() && e.getTime() > d.getTime();
   const indexPageOnly = allPages === 'TRUE' || allPages === 'FALSE' && window.location.pathname == '/';
   let alert = `
 <div class="container">
   <div class="row">
     <div class="col">
-      <div role="alert" class="alert alert-${alertType} d-lg-flex align-items-center pr-lg-1">
+      <div role="alert" class="alert alert-${alertClass} d-lg-flex align-items-center pr-lg-1">
         <div class="typography__last-p--mb0">
           ${parseMarkdownToHTML(content)}
         </div>
@@ -49,7 +48,7 @@ function createAlertsHtml(response) {  // Incoming response from our Google Shee
           title="Refresh the alert"
           id="syncAlert"
           type="button"
-          class="btn btn-link buttons--sync ml-auto">
+          class="btn btn-link buttons--sync ms-auto">
           <svg xmlns="http://www.w3.org/2000/svg"
             class="svg__sync"
             height="24px"
@@ -66,8 +65,11 @@ function createAlertsHtml(response) {  // Incoming response from our Google Shee
   </div>
 </div>`;
 
-  [d,s,e].map(d => d.setHours(0, 0, 0, 0));
-  return alertIsActive && indexPageOnly ? injectAlert(TARGET, alert) : null;
+  [d, s, e].map(d => d.setHours(0, 0, 0, 0));
+
+  if (alertIsActive && indexPageOnly) {
+    injectAlert(TARGET, alert);
+  }
 }
 
 export default createAlertsHtml;

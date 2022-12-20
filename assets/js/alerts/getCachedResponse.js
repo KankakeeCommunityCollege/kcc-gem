@@ -18,12 +18,12 @@ function createCachedResponseObject() {
         0, // First two rows aren't used by the `createAlertsHtml()` function
         0,
         [
-          cache.Visible,
+          cache.getItem('Visible'),
           cache.getItem('All-Pages'),
           cache.getItem('Alert-Content'),
           cache.getItem('Alert-Expiration'),
-          cache.Start,
-          cache.End,
+          cache.getItem('Start'),
+          cache.getItem('End'),
           cache.getItem('Alert-type/Color-scheme')
         ]
       ]

@@ -1,12 +1,27 @@
-const INLINE_MARKDOWN_ELEMENTS_OBJECT = {
-  'strong': /\*\*([^\*]*)\*\*/g,
-  'em': /_([^_]*)_/g
-}
+const pipe = (str, ...fns) => fns.reduce(
+  (x, f) => f(x),
+  str
+);
 
-function replaceRegex(string, regex, replacement) {
-  const newString = string.replace(regex, replacement);
-  return newString;
-}
+const embolden = str => str.replace(
+  /[\*_]{2}([^\*_]+)[\*_]{2}/g,
+  `<strong>$1</strong>`
+);
+
+const emphasize = str => str.replace(
+  /[\*_]([^\*_]+)[\*_]/g,
+  `<em>$1</em>`
+);
+
+const linkify = str => str.replace(
+  /\[([^\]]+)\]\(([^\)]+)\)/g,
+  `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`
+);
+
+const paragraphize = str => str.replace(
+  /^(.*)$/gm,
+  (match, p1) => p1 === '' ? match : `<p class="typography__alert">${p1}</p>`
+);
 
 function escapeCharacters(string, escapeOption) {
   const escapedCharactersObject = {
@@ -20,60 +35,27 @@ function escapeCharacters(string, escapeOption) {
 
   for (let char in escapedCharactersObject) {
     if (escapedCharactersObject.hasOwnProperty(char)) {
-      escapeOption === true ? string = replaceRegex(string, char, escapedCharactersObject[char])
-      : escapeOption === false ? string = replaceRegex(string, escapedCharactersObject[char], char.replace(/^\\/g, ''))
-      : null;
-    }
-  }
-  return string;
-}
+      let rep = escapedCharactersObject[char];
 
-function createAnchorElements(string) {
-  return string = string.replace(/\[(?<linkText>[^\]]*)\]\((?<linkHref>[^\)]*)\)/g, '<a href="$<linkHref>" target="_blank" rel="noopener noreferrer">$<linkText></a>');
-}
-
-function replacer(match, p1) {
-  if ( p1 === '' ) { // Filters out the '__' (double underscore) matches.
-    return match;
-  } else {
-    for (var el in INLINE_MARKDOWN_ELEMENTS_OBJECT) {
-      if (INLINE_MARKDOWN_ELEMENTS_OBJECT.hasOwnProperty(el)) {
-        match = match.replace(INLINE_MARKDOWN_ELEMENTS_OBJECT[el], '<' + el + '>$1</' + el + '>' );
+      if (escapeOption === true) {
+        string = string.replace(char, rep);
       }
-    }
-    return match;
-  }
-}
-
-function createInlineElements(string) {
-  for (var el in INLINE_MARKDOWN_ELEMENTS_OBJECT) {
-    if (INLINE_MARKDOWN_ELEMENTS_OBJECT.hasOwnProperty(el)) {
-      string = string.replace(INLINE_MARKDOWN_ELEMENTS_OBJECT[el], replacer);
+      string = string.replace(rep, char);
     }
   }
   return string;
-}
-
-function paragraphReplacer(match, p1) {
-  if ( p1 === '' ) { // Filters out blank lines
-    return match;
-  } else {
-    return match.replace(/^(.*)$/gm, '<p class="typography__alert">$1</p>');
-  }
-}
-
-function createParagraphElements(string) {
-   return string = string.replace(/^(.*)$/gm, paragraphReplacer);
 }
 
 function parseMarkdownToHTML(string) {
   const escapedString = escapeCharacters(string, true);
-  const stringWithInlineElements = createInlineElements(escapedString);
-  const stringWithAnchorElements = createAnchorElements(stringWithInlineElements);
-  const stringWithParagraphElements = createParagraphElements(stringWithAnchorElements);
-  const unescapedString = escapeCharacters(stringWithParagraphElements, false);
-  //console.log(unescapedString);
-  return unescapedString;
+  const html = pipe(escapedString,
+    embolden,
+    emphasize,
+    linkify,
+    paragraphize
+  );
+
+  return escapeCharacters(html, false);
 }
 
 //
